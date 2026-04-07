@@ -167,30 +167,30 @@ void TreasureHunt::movePlayer(char direction) {
     else if (direction == 's' || direction == 'S') newRow++;
     else if (direction == 'a' || direction == 'A') newCol--;
     else if (direction == 'd' || direction == 'D') newCol++;
-    else return;   // anything else we just ignore
+    else return;   // Anything else we just ignore
 
-    // make sure we didn't walk off the edge of the map
+    // Make sure we didn't walk off the edge of the map
     if (newRow < 0 || newRow >= grid.size())         return;
     if (newCol < 0 || newCol >= grid[newRow].size()) return;
 
     char tile = grid[newRow][newCol];
 
-    // # is a wall — can't go there
+    // # is a wall so we can't go there
     if (tile == '#') return;
 
-    // move the player
+    // Move the player
     playerRow = newRow;
     playerCol = newCol;
 
-    // if they stepped onto a landmark tile, kick off the clue challenge
+    // If they stepped onto a landmark tile, kick off the clue challenge
     if (isLandmark(tile)) {
         triggerClue(tile);
     }
 }
 
-// ---- clue challenge ----
+// Clue challenge:
 
-// runs the Q&A when the player lands on a landmark
+// Runs the Q&A when the player lands on a landmark
 void TreasureHunt::triggerClue(char landmarkSym) {
     Clue* clue = findClue(landmarkSym);
 
@@ -199,7 +199,7 @@ void TreasureHunt::triggerClue(char landmarkSym) {
         return;
     }
 
-    // player already completed this one — skip it
+    // If player already completed this one skip it
     if (clue->completed) {
         cout << endl << "[Already completed this landmark! Keep moving.]" << endl;
         return;
@@ -232,12 +232,13 @@ void TreasureHunt::triggerClue(char landmarkSym) {
 
     if (gotItRight) {
         cout << "Correct! +" << clue->points << " points!" << endl;
-        applyScoreDelta(*scorePtr, clue->points);   // pass by reference requirement
+        applyScoreDelta(*scorePtr, clue->points);   // Pass by reference requirement
         clue->completed = true;
         completedLandmarks++;
 
     } else {
-        // missed all attempts — lose half the clue's point value as a penalty
+        // Missed all attempts 
+        // Lose half the clue's point value as a penalty
         int penalty = clue->points / 2;
         cout << "Out of attempts. The answer was: " << clue->answer << endl;
         cout << "You lose " << penalty << " points." << endl;
@@ -245,7 +246,7 @@ void TreasureHunt::triggerClue(char landmarkSym) {
         clue->completed = true;
         completedLandmarks++;
 
-        // check if score dropped below zero
+        // Check if score dropped below zero
         if (*scorePtr < LOSE_THRESHOLD) {
             cout << endl << "Score dropped below 0 -- game over!" << endl;
             gameOver = true;
@@ -257,7 +258,7 @@ void TreasureHunt::triggerClue(char landmarkSym) {
     cin.ignore();
 }
 
-// ---- main game loop ----
+// Main game loop:
 
 void TreasureHunt::startGame() {
     if (grid.empty() || clues.empty()) {
@@ -268,7 +269,8 @@ void TreasureHunt::startGame() {
     while (!gameOver) {
         drawMap();
 
-        // win condition — all landmarks visited
+        // Win condition
+        // All landmarks visited
         if (completedLandmarks >= totalLandmarks) {
             cout << endl << "You found all the landmarks!" << endl;
             break;
@@ -294,14 +296,14 @@ void TreasureHunt::startGame() {
     displayFinalResult();
 }
 
-// ---- end screen ----
+// End screen:
 
 void TreasureHunt::displayFinalResult() const {
     printDivider();
     cout << "=== GAME OVER ===" << endl;
     cout << "Final Score: " << *scorePtr << endl;
 
-    // calculate completion percentage
+    // Calculate completion percentage
     double pct = 0.0;
     if (totalLandmarks > 0)
         pct = 100.0 * completedLandmarks / totalLandmarks;
@@ -318,10 +320,10 @@ void TreasureHunt::displayFinalResult() const {
     printDivider();
 }
 
-// ---- private helpers ----
+// Private helpers:
 
-// walks the clues vector and returns a pointer to the one matching sym
-// returns nullptr if nothing matches
+// Walks the clues vector and returns a pointer to the one matching sym
+// Returns nullptr if nothing matches
 Clue* TreasureHunt::findClue(char sym) {
     for (int i = 0; i < clues.size(); i++) {
         if (clues[i].symbol == sym)
@@ -330,7 +332,7 @@ Clue* TreasureHunt::findClue(char sym) {
     return nullptr;
 }
 
-// true if the tile letter is one of our defined landmark characters
+// True if the tile letter is one of our defined landmark characters
 bool TreasureHunt::isLandmark(char tile) const {
     for (int i = 0; i < LANDMARK_CHARS.size(); i++) {
         if (LANDMARK_CHARS[i] == tile)
@@ -339,19 +341,19 @@ bool TreasureHunt::isLandmark(char tile) const {
     return false;
 }
 
-// adds delta to whatever score variable is passed in
-// using a reference here so we directly modify the caller's variable
-// this is the pass-by-reference requirement from the assignment
+// Adds delta to whatever score variable is passed in
+// Using a reference here so we directly modify the caller's variable
+// This is the pass-by-reference requirement from the assignment
 void TreasureHunt::applyScoreDelta(int& score, int delta) {
     score += delta;
 }
 
-// wrapper — passes the heap-allocated score into applyScoreDelta by reference
+// Wrapper: passes the heap-allocated score into applyScoreDelta by reference
 void TreasureHunt::updateScore(int delta) {
     applyScoreDelta(*scorePtr, delta);
 }
 
-// prints a simple separator line for readability
+// Prints a simple separator line for readability
 void TreasureHunt::printDivider() const {
     cout << "----------------------------------------------" << endl;
 }
