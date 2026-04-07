@@ -1,25 +1,28 @@
-#include <iostream>
-#include <string>
+#include "Clue.h"
+#include <cctype>
 using namespace std;
 
-// this class holds all the info for one landmark clue
-// each landmark on the map gets its own Clue object
-class Clue {
-public:
-    char symbol;        // the letter on the map (T, P, H, etc.)
-    string question;
-    string answer;
-    int maxAttempts;
-    int points;
-    bool completed;     // tracks if the player already visited this landmark
+// fills in all the clue info called when we load from clues.txt
+Clue::Clue(char sym, string q, string ans, int attempts, int pts) {
+    symbol     = sym;
+    question   = q;
+    answer     = ans;
+    maxAttempts = attempts;
+    points     = pts;
+    completed  = false;   // nobody has answered it yet
+}
 
-    // constructor- fills everything in when we create a Clue
-    Clue(char sym, string q, string ans, int attempts, int pts);
+// converts every character in a string to lowercase to make answers case - insensitive
+string Clue::toLower(const string& s) {
+    string result = s;
+    for (int i = 0; i < result.size(); i++) {
+        result[i] = tolower(result[i]);
+    }
+    return result;
+}
 
-    // will return true if the player's guess matches the correct answer
-    // case-insensitive so "TOWER" and "tower" both count
-    bool checkAnswer(const string& guess) const;
-
-    //converts any string to all lowercase for comparison
-    static string toLower(const string& s);
-};
+// compares the player's guess to the stored answer
+// both sides get lowercased first so casing doesn't matter
+bool Clue::checkAnswer(const string& guess) const {
+    return toLower(guess) == toLower(answer);
+}
