@@ -3,4 +3,5 @@ Group member names:
 Natalie Opiela,
 Ananvita Padmanabhn,
 Diego Barberena,
-Darianna Pando
+Darianna Pando,
+Ayush Kaulgud
