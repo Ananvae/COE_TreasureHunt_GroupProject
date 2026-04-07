@@ -1,8 +1,6 @@
 #include "TreasureHunt.h"
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include <limits>
 using namespace std;
 
 // if score drops below this the player loses
@@ -87,20 +85,31 @@ bool TreasureHunt::loadClues(const string& filename) {
     if (myFile.is_open()) {
         string line;
 
-        while (myFile >> line) {
+        // getline reads the whole line including spaces, which we need
+        // because questions like "In what year was the UT Tower completed?" have spaces
+        while (getline(myFile, line)) {
             if (line.empty()) continue;
 
-            // split the line on | to pull out each field
-            stringstream ss(line);
-            string symStr, question, answer, attStr, ptsStr;
+            // parse each field by finding the | separators one at a time
+            // using find() and substr() which are standard string operations
+            int pos1 = line.find('|');
+            int pos2 = line.find('|', pos1 + 1);
+            int pos3 = line.find('|', pos2 + 1);
+            int pos4 = line.find('|', pos3 + 1);
 
-            if (!getline(ss, symStr,  '|')) continue;
-            if (!getline(ss, question,'|')) continue;
-            if (!getline(ss, answer,  '|')) continue;
-            if (!getline(ss, attStr,  '|')) continue;
-            if (!getline(ss, ptsStr,  '|')) continue;
+            // if any separator is missing, skip this line
+            if (pos1 == string::npos || pos2 == string::npos ||
+                pos3 == string::npos || pos4 == string::npos)
+                continue;
 
-            char sym    = symStr[0];
+            // pull each field out using substr
+            string symStr   = line.substr(0, pos1);
+            string question = line.substr(pos1 + 1, pos2 - pos1 - 1);
+            string answer   = line.substr(pos2 + 1, pos3 - pos2 - 1);
+            string attStr   = line.substr(pos3 + 1, pos4 - pos3 - 1);
+            string ptsStr   = line.substr(pos4 + 1);
+
+            char sym     = symStr[0];
             int attempts = stoi(attStr);
             int pts      = stoi(ptsStr);
 
@@ -242,7 +251,7 @@ void TreasureHunt::triggerClue(char landmarkSym) {
 
     printDivider();
     cout << "Press Enter to continue...";
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.ignore();
 }
 
 // ---- main game loop ----
