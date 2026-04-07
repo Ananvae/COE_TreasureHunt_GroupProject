@@ -9,7 +9,7 @@ const int LOSE_THRESHOLD = 0;
 // Any map tile with one of these letters is a landmark
 const string LANDMARK_CHARS = "TPHUGF";
 
-// Constructor/destructor 
+// Constructor/destructor:
 
 TreasureHunt::TreasureHunt() {
     playerRow = 0;
@@ -30,10 +30,10 @@ TreasureHunt::~TreasureHunt() {
     scorePtr = nullptr;
 }
 
-// ---- file loading ----
+// File loading:
 
-// reads map.txt line by line into the grid vector
-// also finds the @ starting position for the player
+// Reads map.txt line by line into the grid vector
+// Also finds the @ starting position for the player
 bool TreasureHunt::loadMap(const string& filename) {
     ifstream myFile;
     myFile.open(filename);
@@ -43,7 +43,7 @@ bool TreasureHunt::loadMap(const string& filename) {
         int atSignCount = 0;
 
         while (myFile >> line) {
-            // scan each character to find @ and count landmarks
+            // Scan each character to find @ and count landmarks
             for (int col = 0; col < line.size(); col++) {
                 char ch = line[col];
                 if (ch == '@') {
@@ -62,7 +62,7 @@ bool TreasureHunt::loadMap(const string& filename) {
             return false;
         }
 
-        // count all the landmark tiles so we know the win condition
+        // Count all the landmark tiles so we know the win condition
         for (int r = 0; r < grid.size(); r++) {
             for (int c = 0; c < grid[r].size(); c++) {
                 if (isLandmark(grid[r][c]))
@@ -78,7 +78,8 @@ bool TreasureHunt::loadMap(const string& filename) {
     }
 }
 
-// reads clues.txt — each line format: Symbol|Question|Answer|MaxAttempts|Points
+// Reads clues.txt 
+// Each line format: Symbol|Question|Answer|MaxAttempts|Points
 bool TreasureHunt::loadClues(const string& filename) {
     ifstream myFile;
     myFile.open(filename);
@@ -87,23 +88,23 @@ bool TreasureHunt::loadClues(const string& filename) {
         string line;
 
         // getline reads the whole line including spaces, which we need
-        // because questions like "In what year was the UT Tower completed?" have spaces
+        // Because questions like "In what year was the UT Tower completed?" have spaces
         while (getline(myFile, line)) {
             if (line.empty()) continue;
 
-            // parse each field by finding the | separators one at a time
-            // using find() and substr() which are standard string operations
+            // Search each field by finding the | separators one at a time
+            // Using find() and substr() which are standard string operations
             int pos1 = line.find('|');
             int pos2 = line.find('|', pos1 + 1);
             int pos3 = line.find('|', pos2 + 1);
             int pos4 = line.find('|', pos3 + 1);
 
-            // if any separator is missing, skip this line
+            // If any separator is missing, skip this line
             if (pos1 == string::npos || pos2 == string::npos ||
                 pos3 == string::npos || pos4 == string::npos)
                 continue;
 
-            // pull each field out using substr
+            // Pull each field out using substr
             string symStr   = line.substr(0, pos1);
             string question = line.substr(pos1 + 1, pos2 - pos1 - 1);
             string answer   = line.substr(pos2 + 1, pos3 - pos2 - 1);
@@ -114,7 +115,7 @@ bool TreasureHunt::loadClues(const string& filename) {
             int attempts = stoi(attStr);
             int pts      = stoi(ptsStr);
 
-            // build a Clue object and add it to our vector
+            // Build a Clue object and add it to our vector
             clues.push_back(Clue(sym, question, answer, attempts, pts));
         }
 
@@ -127,11 +128,11 @@ bool TreasureHunt::loadClues(const string& filename) {
     }
 }
 
-// ---- drawing ----
+// Drawing:
 
-// redraws the entire map to the console each turn
+// Redraws the entire map to the console each turn
 void TreasureHunt::drawMap() const {
-    // clear screen — works on most terminals
+    // Clear screen: works on most terminals
     cout << "\033[2J\033[H";
 
     cout << "=== UT Campus Treasure Hunt ===" << endl;
@@ -154,9 +155,10 @@ void TreasureHunt::drawMap() const {
     cout << "Move: W/A/S/D  |  Q to quit" << endl;
 }
 
-// ---- movement ----
+// Movement:
 
-// handles one W/A/S/D keypress — checks walls and bounds before moving
+// Handles one W/A/S/D keypress
+// Checks walls and bounds before moving
 void TreasureHunt::movePlayer(char direction) {
     int newRow = playerRow;
     int newCol = playerCol;
