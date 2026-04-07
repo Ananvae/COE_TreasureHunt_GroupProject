@@ -3,13 +3,13 @@
 #include <fstream>
 using namespace std;
 
-// if score drops below this the player loses
+// If score drops below this the player loses
 const int LOSE_THRESHOLD = 0;
 
-// any map tile with one of these letters is a landmark
+// Any map tile with one of these letters is a landmark
 const string LANDMARK_CHARS = "TPHUGF";
 
-// ---- constructor / destructor ----
+// Constructor/destructor 
 
 TreasureHunt::TreasureHunt() {
     playerRow = 0;
@@ -18,13 +18,14 @@ TreasureHunt::TreasureHunt() {
     completedLandmarks = 0;
     gameOver = false;
 
-    // allocating score on the heap to satisfy the pointer requirement
-    // this also means score persists across function calls without being passed around
+    // Allocating score on the heap to satisfy the pointer requirement
+    // This also means score persists across function calls without being passed around
     scorePtr = new int(0);
 }
 
 TreasureHunt::~TreasureHunt() {
-    // every new needs a matching delete — clean up the heap score
+    // Every new needs a matching delete
+    // Clean up the heap score
     delete scorePtr;
     scorePtr = nullptr;
 }
