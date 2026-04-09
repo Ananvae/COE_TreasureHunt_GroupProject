@@ -4,7 +4,8 @@ Natalie Opiela,
 Ananvita Padmanabhn,
 Diego Barberena,
 Darianna Pando,
-Ayush Kaulgud
+Ayush Kaulgud,
+Gabriel Esqueda
 
 # UT Campus Treasure Hunt — COE 301 Group Project
 
@@ -38,11 +39,12 @@ Run from the same folder as map.txt and clues.txt:
 
 ## Team Roles
 
-Ayush — TreasureHunt class, game loop logic, movement and win/loss conditions
-Ananvita — Clue class, file loading, answer checking and case-insensitive comparison
-Natalie — Map design, clues.txt content, landmark placement and trivia research
-Darianna — main.cpp, score system, pointer and reference implementation
-Diego — README, testing, presentation slides
+Ayush - TreasureHunt class, game loop logic and movement
+Ananvita - Clue class, file loading, answer checking and case-insensitive comparison
+Natalie - Map design, clues.txt content
+Darianna - main.cpp, score system, pointer and reference implementation
+Diego - README, testing, debugging
+Gabriel - landmark placement, trivia research and win/loss conditions
 
 ## AI Tool Usage
 
