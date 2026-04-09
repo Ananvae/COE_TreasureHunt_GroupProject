@@ -198,12 +198,7 @@ void TreasureHunt::movePlayer(char direction) {
 // Runs the Q&A when the player lands on a landmark
 void TreasureHunt::triggerClue(char landmarkSym) {
     Clue* clue = findClue(landmarkSym);
-
-    if (clue == nullptr) {
-        cout << "No clue found for this landmark." << endl;
-        return;
-    }
-
+    
     // If player already completed this one skip it
     if (clue->completed) {
         cout << endl << "[Already completed this landmark! Keep moving.]" << endl;
