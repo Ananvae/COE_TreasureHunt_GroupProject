@@ -16,7 +16,7 @@ public:
     // Reads all the clues from a pipe-delimited text file
     bool loadClues(const string& filename);
     // Redraws the map to the console each turn
-    void drawMap() const;
+    void drawMap();
     // Moves the player based on W/A/S/D input
     void movePlayer(char direction);
     // Runs the Q&A challenge when the player steps on a landmark
@@ -43,6 +43,4 @@ private:
     void applyScoreDelta(int& score, int delta);
     // Thin wrapper that calls applyScoreDelta with our heap score
     void updateScore(int delta);
-    // Just prints a divider line to the console
-    void printDivider() const;
 };
