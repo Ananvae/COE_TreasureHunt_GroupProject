@@ -18,8 +18,7 @@ TreasureHunt::TreasureHunt() {
     completedLandmarks = 0;
     gameOver = false;
 
-    // Allocating score on the heap to satisfy the pointer requirement
-    // This also means score persists across function calls without being passed around
+    // Allocating score on the heap which means score persists across function calls without being passed around
     scorePtr = new int(0);
 }
 
@@ -29,8 +28,6 @@ TreasureHunt::~TreasureHunt() {
     delete scorePtr;
     scorePtr = nullptr;
 }
-
-// File loading:
 
 // Reads map.txt line by line into the grid vector
 // Also finds the @ starting position for the player
@@ -79,7 +76,7 @@ bool TreasureHunt::loadMap(const string& filename) {
 }
 
 // Reads clues.txt 
-// Each line format: Symbol|Question|Answer|MaxAttempts|Points
+// Each line format as instructed: Symbol|Question|Answer|MaxAttempts|Points
 bool TreasureHunt::loadClues(const string& filename) {
     ifstream myFile;
     myFile.open(filename);
@@ -87,8 +84,7 @@ bool TreasureHunt::loadClues(const string& filename) {
     if (myFile.is_open()) {
         string line;
 
-        // getline reads the whole line including spaces, which we need
-        // Because questions like "In what year was the UT Tower completed?" have spaces
+        // Because questions like "In what year was the UT Tower completed?" have spaces we use getline instead of cin
         while (getline(myFile, line)) {
             if (line.empty()) continue;
 
@@ -131,7 +127,7 @@ bool TreasureHunt::loadClues(const string& filename) {
 // Drawing:
 
 // Redraws the entire map to the console each turn
-void TreasureHunt::drawMap() const {
+void TreasureHunt::drawMap() {
     // Clear screen: works on most terminals
     cout << "\033[2J\033[H";
 
@@ -143,10 +139,19 @@ void TreasureHunt::drawMap() const {
     for (int r = 0; r < grid.size(); r++) {
         for (int c = 0; c < grid[r].size(); c++) {
             // draw @ on top of whatever tile the player is standing on
-            if (r == playerRow && c == playerCol)
-                cout << '@';
-            else
+            if (r == playerRow && c == playerCol) {
+                cout << "\033[34m" << '@' << "\033[0m";   // blue curent location (@)
+            }
+            else if (isLandmark(grid[r][c])) {
+                Clue* clue = findClue(grid[r][c]);
+                if (clue != nullptr && clue->completed)
+                    cout << "\033[32m" << grid[r][c] << "\033[0m";  // green visited landmarks
+                else
+                    cout << "\033[31m" << grid[r][c] << "\033[0m";  // red unvisited landmarks
+            }
+            else {
                 cout << grid[r][c];
+            }
         }
         cout << endl;
     }
@@ -205,7 +210,6 @@ void TreasureHunt::triggerClue(char landmarkSym) {
         return;
     }
 
-    printDivider();
     cout << "** Landmark Unlocked! **" << endl;
     cout << "Question: " << clue->question << endl;
     cout << "You have " << clue->maxAttempts << " attempt(s). "
@@ -248,12 +252,10 @@ void TreasureHunt::triggerClue(char landmarkSym) {
 
         // Check if score dropped below zero
         if (*scorePtr < LOSE_THRESHOLD) {
-            cout << endl << "Score dropped below 0 -- game over!" << endl;
+            cout << endl << "Score dropped below 0 - game over!" << endl;
             gameOver = true;
         }
     }
-
-    printDivider();
     cout << "Press Enter to continue...";
     cin.ignore();
 }
@@ -269,8 +271,7 @@ void TreasureHunt::startGame() {
     while (!gameOver) {
         drawMap();
 
-        // Win condition
-        // All landmarks visited
+        // Win condition- All landmarks visited
         if (completedLandmarks >= totalLandmarks) {
             cout << endl << "You found all the landmarks!" << endl;
             break;
@@ -292,14 +293,12 @@ void TreasureHunt::startGame() {
 
         movePlayer(cmd);
     }
-
     displayFinalResult();
 }
 
 // End screen:
 
 void TreasureHunt::displayFinalResult() const {
-    printDivider();
     cout << "=== GAME OVER ===" << endl;
     cout << "Final Score: " << *scorePtr << endl;
 
@@ -316,8 +315,6 @@ void TreasureHunt::displayFinalResult() const {
         cout << "You WIN! Hook 'em!" << endl;
     else
         cout << "Better luck next time. The 40 Acres will still be here." << endl;
-
-    printDivider();
 }
 
 // Private helpers:
@@ -353,7 +350,3 @@ void TreasureHunt::updateScore(int delta) {
     applyScoreDelta(*scorePtr, delta);
 }
 
-// Prints a simple separator line for readability
-void TreasureHunt::printDivider() const {
-    cout << "----------------------------------------------" << endl;
-}
