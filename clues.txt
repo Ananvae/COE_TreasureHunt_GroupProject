@@ -1,6 +1,6 @@
 T|In what year was the UT Tower completed?|1937|3|15
 P|What type of animal lives in the Turtle Pond near the Main Building?|turtles|2|10
 H|Hogg Memorial Auditorium is named after which Texas governor's son?|james hogg|3|15
-U|What is the full name of the building students call the Texas Union?|Texas Union|2|10
+U|What is the full name of the building students call the Union?|Texas Union|2|10
 G|The George Washington statue on campus is a replica of a famous sculpture. Who was the original sculptor?|houdon|3|20
-F|Littlefield Fountain was dedicated as a memorial to UT students who served in which war?|world war i|2|15
+F|Littlefield Fountain was dedicated as a memorial to UT students who served in which war?|world war 1|2|15
